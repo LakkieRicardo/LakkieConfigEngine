@@ -1,0 +1,77 @@
+# All special values must be wrapped in parentheses
+
+# You can import packages which the interpreter specifies
+# Packages can either create new functions or overload operators
+
+# The math package includes the following:
+# +, -, *, /, % - add, subtract, multiply, divide, modulo operators for numbers
+# sqrt(number), pow(base: number, power: number), ln(number), max(number, number), min(number, number)
+
+import "math"
+
+# If you want to import a package as under a namespace, you can do
+
+import "math" as "math"
+
+# Now, you can either do this:
+
+another_var = (5 * 3)
+
+# Or with referring to the namespace:
+
+third_var = (5 math.* 3)
+
+# If you would like to call a function, you can do it like so:
+
+func_call_example = (sqrt(4))
+
+# Or like this:
+
+func_call_example_2 = (math.sqrt(4))
+
+# However, this would not be very useful if you could not reference other variables
+# You can do this by specifying the dot-separated namespace, then the name of the variable. For example:
+
+variable_ref_example = (sqrt(namespace.namespace_var))
+
+# Then you can perform operations on them like so:
+
+variable_ref_with_ops = (sqrt(namespace.namespace_var * global_var))
+
+# The values of these expressions will be evaluated each time they are read
+# One use case is with the following. Imagine you have a "game" package:
+
+import "game" as "gm"
+
+# Then you can say that the texture of metal is the same as the texture of wood
+
+textures {
+
+    metal = (gm.texture_wood)
+
+}
+
+# Another important package that may be included is the "string" package
+
+import "string" as "string"
+
+# The + operator is included for string concatenation
+# There is also the concat(string, string) function and substr(string, start: number, end: number) function
+
+textures {
+
+    metal = (gm.texture_root + "/wood.png")
+
+}
+
+# Notice now how we have both math.+ and string.+
+# Because we gave the packages aliases, we can call both of them. However, if no alias is specified the latest package that is imported will be used
+# If you want to switch between them without using aliases, you re-import the same package - this is optimized
+
+import "math"
+
+number = (5 + 4)
+
+import "string"
+
+string = ("a string" + " b string")

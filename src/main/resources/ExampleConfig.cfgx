@@ -1,0 +1,12 @@
+# The same basic configuration can be applied for cfgx files
+
+global_var = 6.9
+
+namespace {
+
+    namespace_var = "Another variable in a namespace"
+
+}
+
+#### Special Operations ####
+

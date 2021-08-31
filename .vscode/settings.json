@@ -1,5 +1,6 @@
 {
     "files.watcherExclude": {
         "**/target": true
-    }
+    },
+    "restructuredtext.syntaxHighlighting.disabled": true
 }
