@@ -1,5 +1,0 @@
-0 No Error
-1 Invalid opening bracket
-2 Invalid closing bracket
-3 Missing assignment operator
-4 Missing identifier for value
