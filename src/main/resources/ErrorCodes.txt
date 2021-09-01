@@ -3,3 +3,4 @@
 2 Invalid closing bracket
 3 Missing assignment operator
 4 Missing identifier for value
+5 Missing identifier for assignment

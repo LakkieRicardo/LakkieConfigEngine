@@ -8,6 +8,9 @@ class TokenIterator(var input: BufferedSource) extends Iterator[LConfigToken] {
   var isFirstChar = true
   var appendPrevChar = false
 
+  var currentLine = 1
+  var currentChar = 1
+
   override def hasNext: Boolean = input.hasNext
 
   override def next(): LConfigToken = {
@@ -16,6 +19,9 @@ class TokenIterator(var input: BufferedSource) extends Iterator[LConfigToken] {
     val currentTokenValue = new StringBuilder()
     var stringTokenEscaped = false
 
+    var tokenStartLine = currentLine
+    var tokenStartChar = currentChar
+    
     while (hasNext) {
       var nextChar = ' '
       if (isFirstChar) {
@@ -27,7 +33,13 @@ class TokenIterator(var input: BufferedSource) extends Iterator[LConfigToken] {
           appendPrevChar = false
         } else {
           nextChar = input.next
+          currentChar += 1
         }
+      }
+
+      if (nextChar == '\n') {
+        currentLine += 1
+        currentChar = 1
       }
 
       if (!isConfigLine && nextChar != '#') {
@@ -36,9 +48,13 @@ class TokenIterator(var input: BufferedSource) extends Iterator[LConfigToken] {
           currentToken = identifyTokenByFirstCharacter(nextChar)
           if (currentToken == LConfigTokenType.TokenAssignment || currentToken == LConfigTokenType.TokenBraceOpen || currentToken == LConfigTokenType.TokenBraceClose) {
             currentTokenValue.append(nextChar)
-            return new LConfigToken(currentToken, currentTokenValue.toString)
+            tokenStartLine = currentLine
+            tokenStartChar = currentChar
+            return new LConfigToken(currentToken, currentTokenValue.toString, tokenStartLine, tokenStartChar, currentLine, currentChar)
           } else if (currentToken != LConfigTokenType.TokenNone) {
             currentTokenValue.append(nextChar)
+            tokenStartLine = currentLine
+            tokenStartChar = currentChar
           }
         } else {
           if (currentToken == LConfigTokenType.TokenNumber) {
@@ -46,7 +62,7 @@ class TokenIterator(var input: BufferedSource) extends Iterator[LConfigToken] {
               // If this is the end of the number sequence
               prevChar = nextChar
               appendPrevChar = true
-              return new LConfigToken(currentToken, currentTokenValue.toString)
+              return new LConfigToken(currentToken, currentTokenValue.toString, tokenStartLine, tokenStartChar, currentLine, currentChar)
             } else {
               currentTokenValue.append(nextChar)
             }
@@ -64,7 +80,7 @@ class TokenIterator(var input: BufferedSource) extends Iterator[LConfigToken] {
                 stringTokenEscaped = false
               } else {
                 prevChar = nextChar
-                return new LConfigToken(currentToken, currentTokenValue.toString)
+                return new LConfigToken(currentToken, currentTokenValue.toString, tokenStartLine, tokenStartChar, currentLine, currentChar)
               }
             } else {
               currentTokenValue.append(nextChar)
@@ -75,7 +91,7 @@ class TokenIterator(var input: BufferedSource) extends Iterator[LConfigToken] {
             } else {
               prevChar = nextChar
               appendPrevChar = true
-              return new LConfigToken(currentToken, currentTokenValue.toString)
+              return new LConfigToken(currentToken, currentTokenValue.toString, tokenStartLine, tokenStartChar, currentLine, currentChar)
             }
           }
         }
